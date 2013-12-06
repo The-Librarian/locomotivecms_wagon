@@ -1,3 +1,5 @@
+require "locomotive/services/liquid_renderer"
+
 module Locomotive::Wagon
   class Server
 
@@ -27,7 +29,7 @@ module Locomotive::Wagon
       def render_page
         context = self.locomotive_context
         begin
-          self.page.render(context)
+          Locomotive::Services::LiquidRenderer.call(page, context, {page: page, mounting_point: context.registers[:mounting_point]})
         rescue Exception => e
           raise RendererException.new(e, self.page.title, self.page.template, context)
         end
